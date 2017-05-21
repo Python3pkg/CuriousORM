@@ -74,7 +74,7 @@ def _compose_select(kwargs, table):
     if order:
         order = ' ORDER BY ' + order
     predicate = ' AND '.join(
-        ['"{0}"=%s'.format(k.replace('"', '""')) for k in kwargs.keys()])
+        ['"{0}"=%s'.format(k.replace('"', '""')) for k in list(kwargs.keys())])
     if predicate:
         predicate = ' WHERE ' + predicate
     query = 'SELECT %s FROM "%s"%s%s' % (
@@ -88,7 +88,7 @@ def _compose_insert(kwargs, table):
         returning = ' RETURNING ' + returning
     if kwargs:
         columns = ','.join(
-            ['"{0}"'.format(k.replace('"', '""')) for k in kwargs.keys()])
+            ['"{0}"'.format(k.replace('"', '""')) for k in list(kwargs.keys())])
         placeholders = ','.join(len(kwargs) * ['%s'])
         query = 'INSERT INTO "%s" (%s) VALUES (%s)%s' % (
             table.replace('"', '""'), columns, placeholders, returning)
@@ -100,7 +100,7 @@ def _compose_insert(kwargs, table):
 
 def _compose_delete(pkey, table):
     predicate = ' AND '.join(
-        ['"{0}"=%s'.format(k.replace('"', '""')) for k in pkey.keys()])
+        ['"{0}"=%s'.format(k.replace('"', '""')) for k in list(pkey.keys())])
     query = 'DELETE FROM "%s" WHERE %s' % (
         table.replace('"', '""'), predicate)
     return query, list(pkey.values())
@@ -108,9 +108,9 @@ def _compose_delete(pkey, table):
 
 def _compose_update(pkey, fields, table):
     field_setters = ','.join(
-        ['"{0}"=%s'.format(k.replace('"', '""')) for k in fields.keys()])
+        ['"{0}"=%s'.format(k.replace('"', '""')) for k in list(fields.keys())])
     predicate = ' AND '.join(
-        ['"{0}"=%s'.format(k.replace('"', '""')) for k in pkey.keys()])
+        ['"{0}"=%s'.format(k.replace('"', '""')) for k in list(pkey.keys())])
     if predicate:
         predicate = ' WHERE ' + predicate
     query = 'UPDATE "%s" SET %s%s' % (
